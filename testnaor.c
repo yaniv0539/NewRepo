@@ -48,11 +48,11 @@ void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr);
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
 SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc);
 SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos* pSrc,
-	Player p, unsigned short numOfCaptures);
+	Player p, unsigned short numOfCaptures, bool isFirstMove);
 SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc,
 	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[]);
 void copyBoard(Board newBoard, Board oldBoard);
-int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir);
+int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove);
 void createNewSrc(checkersPos* res, checkersPos* pSrc, Player p, int dir, int steps);
 int getRowNum(char rowChar);
 int getColNum(char colNum);
@@ -60,11 +60,12 @@ int getColNum(char colNum);
 void main()
 {
 	Board board;
-	checkersPos pos = { 'F', '1' };
+	SingleSourceMovesTree* pTree;
+	checkersPos pos = { 'G', '2' };
 
 	buildBoard(board);
 
-	FindSingleSourceMoves(board, &pos);
+	pTree = FindSingleSourceMoves(board, &pos);
 }
 
 // Temporary function to build board. 
@@ -75,31 +76,31 @@ void buildBoard(Board board)
 		for (j = 0; j < BOARD_SIZE; j++)
 			board[i][j] = ' ';
 
-	board[4][1] = FIRST_PLAYER;
-	board[0][3] = FIRST_PLAYER;
-	board[0][5] = FIRST_PLAYER;
-	board[0][7] = FIRST_PLAYER;
-	board[1][0] = FIRST_PLAYER;
+	board[3][0] = FIRST_PLAYER;
 	board[1][2] = FIRST_PLAYER;
+	board[5][2] = FIRST_PLAYER;
 	board[1][4] = FIRST_PLAYER;
+	board[3][4] = FIRST_PLAYER;
 	board[1][6] = FIRST_PLAYER;
-	board[2][1] = FIRST_PLAYER;
-	board[2][3] = FIRST_PLAYER;
-	board[2][5] = FIRST_PLAYER;
-	board[2][7] = FIRST_PLAYER;
+	board[3][6] = FIRST_PLAYER;
+	//board[1][6] = FIRST_PLAYER;
+	//board[2][1] = FIRST_PLAYER;
+	//board[2][3] = FIRST_PLAYER;
+	//board[2][5] = FIRST_PLAYER;
+	//board[2][7] = FIRST_PLAYER;
 
-	board[5][0] = SECOND_PLAYER;
-	board[5][2] = SECOND_PLAYER;
-	board[5][4] = SECOND_PLAYER;
-	board[5][6] = SECOND_PLAYER;
 	board[6][1] = SECOND_PLAYER;
-	board[6][3] = SECOND_PLAYER;
-	board[6][5] = SECOND_PLAYER;
-	board[6][7] = SECOND_PLAYER;
-	board[7][0] = SECOND_PLAYER;
-	board[7][2] = SECOND_PLAYER;
-	board[7][4] = SECOND_PLAYER;
-	board[7][6] = SECOND_PLAYER;
+	//board[5][2] = SECOND_PLAYER;
+	//board[5][4] = SECOND_PLAYER;
+	//board[5][6] = SECOND_PLAYER;
+	//board[6][1] = SECOND_PLAYER;
+	//board[6][3] = SECOND_PLAYER;
+	//board[6][5] = SECOND_PLAYER;
+	//board[6][7] = SECOND_PLAYER;
+	//board[7][0] = SECOND_PLAYER;
+	//board[7][2] = SECOND_PLAYER;
+	//board[7][4] = SECOND_PLAYER;
+	//board[7][6] = SECOND_PLAYER;
 }
 
 // Makes empty single source moves tree by initialized to NULL
@@ -140,21 +141,21 @@ SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc)
 
 	makeEmptySingleSourceMovesTree(pTree);
 
-	pTree->source = FindSingleSourceMovesHelper(board, pSrc, p, 0);
+	pTree->source = FindSingleSourceMovesHelper(board, pSrc, p, 0, true);
 
 	return pTree;
 }
 
 // Recursive helper function to 'FindSingleSourceMoves'. Creates all the possible routes for single source. 
 SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos* pSrc,
-	Player p, unsigned short numOfCaptures)
+	Player p, unsigned short numOfCaptures, bool isFirstMove)
 {
 	SingleSourceMovesTreeNode* source;
 	int rightRoute, leftRoute;
 	checkersPos rightSrc, leftSrc;
 
-	rightRoute = checkDiagonal(board, pSrc, p, numOfCaptures, RIGHT);
-	leftRoute = checkDiagonal(board, pSrc, p, numOfCaptures, LEFT);
+	rightRoute = checkDiagonal(board, pSrc, p, numOfCaptures, RIGHT, isFirstMove);
+	leftRoute = checkDiagonal(board, pSrc, p, numOfCaptures, LEFT, isFirstMove);
 
 	source = createNewSingleSourceMovesTreeNode(board, pSrc, numOfCaptures, NULL);
 
@@ -164,25 +165,25 @@ SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos*
 	if (rightRoute == MOVE_WITHOUT_CAPTURE)
 	{
 		createNewSrc(&rightSrc, pSrc, p, RIGHT, MOVE_WITHOUT_CAPTURE);
-		source->next_moves[RIGHT] = FindSingleSourceMovesHelper(board, &rightSrc, p, numOfCaptures);
+		source->next_moves[RIGHT] = FindSingleSourceMovesHelper(board, &rightSrc, p, numOfCaptures, false);
 	}
 
 	else if (rightRoute == MOVE_WITH_CAPTURE)
 	{
 		createNewSrc(&rightSrc, pSrc, p, RIGHT, MOVE_WITH_CAPTURE);
-		source->next_moves[RIGHT] = FindSingleSourceMovesHelper(board, &rightSrc, p, numOfCaptures + 1);
+		source->next_moves[RIGHT] = FindSingleSourceMovesHelper(board, &rightSrc, p, numOfCaptures + 1, false);
 	}
 
 	if (leftRoute == MOVE_WITHOUT_CAPTURE)
 	{
 		createNewSrc(&leftSrc, pSrc, p, LEFT, MOVE_WITHOUT_CAPTURE);
-		source->next_moves[LEFT] = FindSingleSourceMovesHelper(board, &leftSrc, p, numOfCaptures);
+		source->next_moves[LEFT] = FindSingleSourceMovesHelper(board, &leftSrc, p, numOfCaptures, false);
 	}
 
 	else if (leftRoute == MOVE_WITH_CAPTURE)
 	{
 		createNewSrc(&leftSrc, pSrc, p, LEFT, MOVE_WITH_CAPTURE);
-		source->next_moves[LEFT] = FindSingleSourceMovesHelper(board, &leftSrc, p, numOfCaptures + 1);
+		source->next_moves[LEFT] = FindSingleSourceMovesHelper(board, &leftSrc, p, numOfCaptures + 1, false);
 	}
 
 	return source;
@@ -230,12 +231,16 @@ void copyBoard(Board newBoard, Board oldBoard)
 }
 
 // Checks the all possible routes for specific source on board. 
-int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir)
+int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove)
 {
 	int rowNum, colNum;
 
 	rowNum = getRowNum(pSrc->row);
 	colNum = getColNum(pSrc->col);
+
+	// Checks if not first move and didn't capture yet.
+	if (!numOfCaptures && !isFirstMove)
+		return STUCK;
 
 	// Checks if stuck after single move.
 	if ((p == FIRST_PLAYER && dir == LEFT && colNum == FIRST_COL) ||
@@ -271,33 +276,28 @@ int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOf
 // Creates new position by the data that was given - player, his direction and how many steps he wants to move. 
 void createNewSrc(checkersPos* res, checkersPos* pSrc, Player p, int dir, int steps)
 {
-	int rowNum, colNum;
-
-	rowNum = getRowNum(pSrc->row);
-	colNum = getColNum(pSrc->col);
-
 	if (p == FIRST_PLAYER && dir == LEFT)
 	{
-		res->row = rowNum + steps;
-		res->col = colNum - steps;
+		res->row = pSrc->row + steps;
+		res->col = pSrc->col - steps;
 	}
 
 	else if (p == FIRST_PLAYER && dir == RIGHT)
 	{
-		res->row = rowNum + steps;
-		res->col = colNum + steps;
+		res->row = pSrc->row + steps;
+		res->col = pSrc->col + steps;
 	}
 
 	else if (p == SECOND_PLAYER && dir == LEFT)
 	{
-		res->row = rowNum - steps;
-		res->col = colNum + steps;
+		res->row = pSrc->row - steps;
+		res->col = pSrc->col + steps;
 	}
 
 	else if (p == SECOND_PLAYER && dir == RIGHT)
 	{
-		res->row = rowNum - steps;
-		res->col = colNum - steps;
+		res->row = pSrc->row - steps;
+		res->col = pSrc->col - steps;
 	}
 }
 
