@@ -40,64 +40,98 @@ typedef struct _SingleSoourceMovesList {
 
 // Functions I created, Declarations:
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
-int FindSingleSourceOptimalMoveHelper(SingleSourceMovesList* lst, SingleSourceMovesTreeNode* root);
+void FindSingleSourceOptimalMoveHelperT(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root);
+void FindSingleSourceOptimalMoveHelperB(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root);
 
 void makeEmptySSMList(SingleSourceMovesList* lst);
+bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
-void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
+void insertSSMListCellToEndList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
+void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src);
+void removeSSMListCellFromEndList(SingleSourceMovesList* list);
+void freeList(SingleSourceMovesList* lst);
+void checkCellAllocation(SingleSourceMovesListCell* cell);
 //
 
 
 // Main Q2 function
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree)
 {
-	int sizeOfRoute;
-	SingleSourceMovesList* lst;
-	makeEmptySSMList(lst);
-	sizeOfRoute = FindSingleSourceOptimalMoveHelper(lst, moves_tree->source);
+	checkersPos* pos; // Use getPlayerFromPos() from Yaniv
+	pos = moves_tree->source->pos;
 
-	return lst;
+	SingleSourceMovesList* currentPath, *bestPath;
+	makeEmptySSMList(currentPath);
+	makeEmptySSMList(bestPath);
+
+	if (moves_tree->source->board[pos->col][pos->row] == 'T')
+	{
+		FindSingleSourceOptimalMoveHelperT(currentPath, bestPath, moves_tree->source);
+	}
+	else if(moves_tree->source->board[pos->col][pos->row] == 'B')
+	{
+		FindSingleSourceOptimalMoveHelperB(currentPath, bestPath, moves_tree->source);
+
+	}
+
+	return bestPath;
 
 }
 
-int FindSingleSourceOptimalMoveHelper(SingleSourceMovesList* lst, SingleSourceMovesTreeNode* root)
+void FindSingleSourceOptimalMoveHelperT(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root)
 {
-	SingleSourceMovesListCell* newCell;
-	int captureL = 0, captureR = 0;
+	if (root == NULL)
+		return;
+
+	// Add current node to current path
+	SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
+	insertSSMListCellToEndList(currentPath, newCell); 
+
 	if (root->next_move[0] == NULL && root->next_move[1] == NULL)
 	{
-		return root->total_captures_so_far;
-	}	
-	else if (root->next_move[0] != NULL && root->next_move[1] == NULL)
-	{
-		captureL = FindSingleSourceOptimalMoveHelper(lst, root->next_move[0]);
+		if (bestPath->head == NULL || root->total_captures_so_far >= bestPath->tail->captures)
+		{
+			copyList(bestPath, currentPath);
+		}
 	}
-	else if (root->next_move[0] == NULL && root->next_move[1] != NULL)
+	else
 	{
-		captureR = FindSingleSourceOptimalMoveHelper(lst, root->next_move[1]);
-	}
-	else if (root->next_move[0] != NULL && root->next_move[1] != NULL)
-	{
-		captureL = FindSingleSourceOptimalMoveHelper(lst, root->next_move[0]);
-		captureR = FindSingleSourceOptimalMoveHelper(lst, root->next_move[1]);
+		FindSingleSourceOptimalMoveHelper(currentPath, bestPath, root->next_move[0]);
+		FindSingleSourceOptimalMoveHelper(currentPath, bestPath, root->next_move[1]);
 	}
 
-	if (captureL > captureR)
-	{
-		newCell = createNewSSMListCell(root->next_move[0]->pos, root->next_move[0]->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lst, newCell);
-		return captureL + root->total_captures_so_far;
-	}
-	else if (captureL <= captureR)
-	{
-		newCell = createNewSSMListCell(root->next_move[1]->pos, root->next_move[1]->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lst, newCell);
-		return captureR + root->total_captures_so_far;
-	}
+	// Remove current node from current path before returning to previous call
+	removeSSMListCellFromEndList(currentPath); 
 }
 
-//
+void FindSingleSourceOptimalMoveHelperB(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root)
+{
+	if (root == NULL)
+		return;
 
+	// Add current node to current path
+	SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
+	insertSSMListCellToEndList(currentPath, newCell);
+
+	if (root->next_move[0] == NULL && root->next_move[1] == NULL)
+	{
+		if (bestPath->head == NULL || root->total_captures_so_far >= bestPath->tail->captures)
+		{
+			copyList(bestPath, currentPath);
+		}
+	}
+	else
+	{
+		FindSingleSourceOptimalMoveHelper(currentPath, bestPath, root->next_move[1]);
+		FindSingleSourceOptimalMoveHelper(currentPath, bestPath, root->next_move[0]);
+	}
+
+	// Remove current node from current path before returning to previous call
+	removeSSMListCellFromEndList(currentPath);
+}
+
+
+//
 
 void makeEmptySSMList(SingleSourceMovesList* lst)
 {
@@ -105,10 +139,19 @@ void makeEmptySSMList(SingleSourceMovesList* lst)
 	lst->tail = NULL;
 }
 
+bool isEmptyList(SingleSourceMovesList* lst)
+{
+	if (lst->head == NULL && lst->tail == NULL)
+		return true;
+	else
+		return false;
+}
+
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next)
 {
 	SingleSourceMovesListCell* newNode;
 	newNode = (SingleSourceMovesListCell*)malloc(sizeof(SingleSourceMovesListCell));
+	checkCellAllocation(newNode);
 
 	newNode->position = position;
 	newNode->captures = captures;
@@ -117,16 +160,81 @@ SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned 
 	return newNode;
 }
 
-void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell)
+void insertSSMListCellToEndList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell)
 {
 	if (isEmptyList(lst) == true)
 	{
-		cell->next = NULL;
 		lst->head = lst->tail = cell;
 	}
-	else
+	else 
 	{
-		cell->next = lst->head;
-		lst->head = cell;
+		lst->tail->next = cell;
+		lst->tail = cell;
+	}
+	cell->next = NULL;
+
+}
+
+void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src)
+{
+	freeList(dest);
+
+	SingleSourceMovesListCell* current = src->head;
+	while (current != NULL)
+	{
+		SingleSourceMovesListCell* newCell = createNewSSMListCell(current->position, current->captures, NULL);
+		insertSSMListCellToEndList(dest, newCell);
+		current = current->next;
 	}
 }
+
+void removeSSMListCellFromEndList(SingleSourceMovesList* list)
+{
+	// If the list is empty, return
+	if (list->head == NULL)
+		return;
+
+	// If there is only one node on the list
+	if (list->head == list->tail)
+	{
+		free(list->head);
+		list->head = list->tail = NULL;
+		return;
+	}
+
+	SingleSourceMovesListCell* secondLast = list->head;
+	while (secondLast->next != list->tail)
+	{
+		secondLast = secondLast->next;
+	}
+
+	free(list->tail);
+	list->tail = secondLast;
+	list->tail->next = NULL;
+}
+
+void freeList(SingleSourceMovesList* lst)
+{
+	SingleSourceMovesListCell* current = lst->head;
+	while (current != NULL)
+	{
+		SingleSourceMovesListCell* next = current->next;
+		free(current);
+		current = next;
+	}
+	lst->head = NULL;
+	lst->tail = NULL;
+}
+
+void checkCellAllocation(SingleSourceMovesListCell* cell)
+{
+	if (cell == NULL) {
+		printf("memory allocation failed!");
+		exit(1);
+	}
+}
+
+
+
+
+
