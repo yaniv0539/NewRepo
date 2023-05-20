@@ -43,6 +43,10 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 void FindSingleSourceOptimalMoveHelperT(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root);
 void FindSingleSourceOptimalMoveHelperB(SingleSourceMovesList* currentPath, SingleSourceMovesList* bestPath, SingleSourceMovesTreeNode* root);
 
+Player getPlayerFromPos(Board board, checkersPos* pSrc);
+int getRowNum(char rowChar);
+int getColNum(char colNum);
+
 void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
@@ -57,18 +61,18 @@ void checkCellAllocation(SingleSourceMovesListCell* cell);
 // Main Q2 function
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree)
 {
-	checkersPos* pos; // Use getPlayerFromPos() from Yaniv
-	pos = moves_tree->source->pos;
+	Player p;
+	p = getPlayerFromPos(moves_tree->source->board, moves_tree->source->pos);
 
-	SingleSourceMovesList* currentPath, *bestPath;
+	SingleSourceMovesList* currentPath, *bestPath; // should malloc? 
 	makeEmptySSMList(currentPath);
 	makeEmptySSMList(bestPath);
 
-	if (moves_tree->source->board[pos->col][pos->row] == 'T')
+	if (p == 'T')
 	{
 		FindSingleSourceOptimalMoveHelperT(currentPath, bestPath, moves_tree->source);
 	}
-	else if(moves_tree->source->board[pos->col][pos->row] == 'B')
+	else if(p == 'B')
 	{
 		FindSingleSourceOptimalMoveHelperB(currentPath, bestPath, moves_tree->source);
 
@@ -130,6 +134,29 @@ void FindSingleSourceOptimalMoveHelperB(SingleSourceMovesList* currentPath, Sing
 	removeSSMListCellFromEndList(currentPath);
 }
 
+
+// Gets the player name from position.
+Player getPlayerFromPos(Board board, checkersPos* pSrc)
+{
+	int rowNum, colNum;
+
+	rowNum = getRowNum(pSrc->row);
+	colNum = getColNum(pSrc->col);
+
+	return board[rowNum][colNum];
+}
+
+// Change row from char to int.
+int getRowNum(char rowChar)
+{
+	return rowChar - 'A';
+}
+
+// Change column from char to int.
+int getColNum(char colNum)
+{
+	return colNum - '1';
+}
 
 //
 
@@ -233,8 +260,4 @@ void checkCellAllocation(SingleSourceMovesListCell* cell)
 		exit(1);
 	}
 }
-
-
-
-
 
