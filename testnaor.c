@@ -145,6 +145,7 @@ SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc)
 
 	return pTree;
 }
+//TEST GIT
 
 // Recursive helper function to 'FindSingleSourceMoves'. Creates all the possible routes for single source. 
 SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos* pSrc,
