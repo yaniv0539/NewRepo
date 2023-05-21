@@ -71,7 +71,6 @@ void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src); // DELETE
 void removeSSMListCellFromEndList(SingleSourceMovesList* list); // DELETE
 void freeList(SingleSourceMovesList* lst);
 void checkCellAllocation(SingleSourceMovesListCell* cell);
@@ -273,19 +272,6 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 		lst->head = cell;
 	}
 
-}
-
-void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src)
-{
-	freeList(dest);
-
-	SingleSourceMovesListCell* current = src->head;
-	while (current != NULL)
-	{
-		SingleSourceMovesListCell* newCell = createNewSSMListCell(current->position, current->captures, NULL);
-		insertSSMListCellToEndList(dest, newCell);
-		current = current->next;
-	}
 }
 
 void removeSSMListCellFromEndList(SingleSourceMovesList* list)
