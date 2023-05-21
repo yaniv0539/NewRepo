@@ -71,8 +71,8 @@ void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src);
-void removeSSMListCellFromEndList(SingleSourceMovesList* list);
+void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src); // DELETE
+void removeSSMListCellFromEndList(SingleSourceMovesList* list); // DELETE
 void freeList(SingleSourceMovesList* lst);
 void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
@@ -113,7 +113,9 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeN
 
 	SingleSourceMovesList* lstL,* lstR;
 	lstL = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
+	checkListAllocation(lstL);
 	lstR = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
+	checkListAllocation(lstR);
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
@@ -163,7 +165,9 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeN
 
 	SingleSourceMovesList* lstL,* lstR;
 	lstL = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
+	checkListAllocation(lstL);
 	lstR = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
+	checkListAllocation(lstR);
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
