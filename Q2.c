@@ -69,7 +69,6 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 	SingleSourceMovesList* bestPath; // should malloc? 
 	bestPath = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
 	checkListAllocation(bestPath);
-
 	makeEmptySSMList(bestPath);
 
 	if (p == 'T')
@@ -78,7 +77,7 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 	}
 	else if(p == 'B')
 	{
-
+		*bestPath = FindSingleSourceOptimalMoveHelperB(moves_tree->source);
 	}
 
 	return bestPath;
