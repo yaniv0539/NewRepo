@@ -37,7 +37,7 @@ typedef struct _SingleSourceMovesTreeNode {
 	Board board;
 	checkersPos* pos;
 	unsigned short total_captures_so_far; // מספר דילוגים עד כה
-	struct _SingleSourceMovesTreeNode* next_move[2]; //יעדי תנועה
+	struct _SingleSourceMovesTreeNode* next_moves[2]; //יעדי תנועה
 
 }SingleSourceMovesTreeNode;
 
@@ -119,8 +119,8 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeN
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
-	lstL = FindSingleSourceOptimalMoveHelperT(root->next_move[0]);
-	lstR = FindSingleSourceOptimalMoveHelperT(root->next_move[1]);
+	lstL = FindSingleSourceOptimalMoveHelperT(root->next_moves[0]);
+	lstR = FindSingleSourceOptimalMoveHelperT(root->next_moves[1]);
 
 	if (lstL->head == NULL || lstR->head == NULL)
 	{
@@ -171,8 +171,8 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeN
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
-	lstL = FindSingleSourceOptimalMoveHelperT(root->next_move[1]);
-	lstR = FindSingleSourceOptimalMoveHelperT(root->next_move[0]);
+	lstL = FindSingleSourceOptimalMoveHelperT(root->next_moves[1]);
+	lstR = FindSingleSourceOptimalMoveHelperT(root->next_moves[0]);
 
 	if (lstL == NULL || lstR == NULL)
 	{
