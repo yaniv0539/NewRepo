@@ -50,26 +50,26 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 
 }
 
-void removeSSMListCellFromStartList(SingleSourceMovesList* list)
-{
-	// If the list is empty, return
-	if (list->head == NULL)
-		return;
-
-	// If there is only one node on the list
-	if (list->head == list->tail)
-	{
-		free(list->head);
-		list->head = list->tail = NULL;
-		return;
-	}
-
-	SingleSourceMovesListCell* temp = list->head;
-	list->head = list->head->next;
-
-	free(temp);
-
-}
+//void removeSSMListCellFromStartList(SingleSourceMovesList* list)
+//{
+//	// If the list is empty, return
+//	if (list->head == NULL)
+//		return;
+//
+//	// If there is only one node on the list
+//	if (list->head == list->tail)
+//	{
+//		free(list->head);
+//		list->head = list->tail = NULL;
+//		return;
+//	}
+//
+//	SingleSourceMovesListCell* temp = list->head;
+//	list->head = list->head->next;
+//
+//	free(temp);
+//
+//}
 
 void freeList(SingleSourceMovesList* lst)
 {

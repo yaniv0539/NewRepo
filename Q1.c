@@ -1,16 +1,5 @@
 #include <GameLib.h>
 
-void main()
-{
-	Board board;
-	SingleSourceMovesTree* pTree;
-	checkersPos pos = { 'G', '2' };
-
-	buildBoard(board);
-
-	pTree = FindSingleSourceMoves(board, &pos);
-}
-
 // Temporary function to build board. 
 void buildBoard(Board board)
 {

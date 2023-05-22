@@ -77,4 +77,10 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeN
 
 MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player);
 
+// Q4
+
+void Turn(Board board, Player player);
+bool isReallyCurrSourceTheBest(Player player, MultipleSourceMovesListCell* source_best_move, MultipleSourceMovesListCell* player_best_move);
+void updateBoard(Board board, SingleSourceMovesTreeNode* source, checkersPos* pSrc);
+
 #endif // !__GAME_LIB_H

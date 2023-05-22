@@ -20,6 +20,4 @@ void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr);
 SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc, 
 	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[]);
 
-// include Board, checkersPos (Game.h ?)
-
 #endif // !__TREE_LIB_H
