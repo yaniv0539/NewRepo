@@ -26,16 +26,7 @@ typedef struct _SingleSourceMovesTree {
 	SingleSourceMovesTreeNode* source;
 }SingleSourceMovesTree;
 
-typedef struct _SingleSoourceMovesListCell {
-	checkersPos* position;
-	unsigned short captures;
-	struct _SingleSourceMovesListCell* next;
-}SingleSourceMovesListCell;
 
-typedef struct _SingleSoourceMovesList {
-	SingleSourceMovesListCell* head;
-	SingleSourceMovesListCell* tail;
-}SingleSourceMovesList;
 
 
 // Functions I created, Declarations:
@@ -47,14 +38,7 @@ Player getPlayerFromPos(Board board, checkersPos* pSrc);
 int getRowNum(char rowChar);
 int getColNum(char colNum);
 
-void makeEmptySSMList(SingleSourceMovesList* lst);
-bool isEmptyList(SingleSourceMovesList* lst);
-SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
-void insertSSMListCellToEndList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src);
-void removeSSMListCellFromEndList(SingleSourceMovesList* list);
-void freeList(SingleSourceMovesList* lst);
-void checkCellAllocation(SingleSourceMovesListCell* cell);
+
 //
 
 
