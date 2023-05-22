@@ -1,5 +1,7 @@
 #include <ListLib.h>
 
+// Q2
+
 void makeEmptySSMList(SingleSourceMovesList* lst)
 {
 	lst->head = NULL;
@@ -98,7 +100,9 @@ void checkListAllocation(SingleSourceMovesList* lst)
 	}
 }
 
-void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* tail)
+// Q3
+
+void insertCellToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail)
 {
 	if (isEmptyMultipleSourceMovesList(lst) == true)
 		lst->head = lst->tail = tail;
@@ -110,7 +114,37 @@ void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSo
 	tail->next = NULL;
 }
 
+void insertDataToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* data)
+{
+	MultipleSourceMovesListCell* newTail;
+	newTail = createNewSingleSourceMovesList(data, NULL);
+	insertCellToEndOfMultipleSourceMovesList(lst, newTail);
+}
+
+MultipleSourceMovesListCell* createNewSingleSourceMovesList(SingleSourceMovesList* data, MultipleSourceMovesListCell* next)
+{
+	MultipleSourceMovesListCell* res;
+	res = (MultipleSourceMovesListCell*)malloc(sizeof(MultipleSourceMovesListCell));
+
+	if (!res)
+	{
+		printf("Memory allocation failure!!!");
+		exit(1);
+	}
+
+	res->single_source_moves_list = data;
+	res->next = next;
+	return res;
+}
+
 void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst)
 {
 	lst->head = lst->tail = NULL;
+}
+
+bool isEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst)
+{
+	if (lst->head == NULL)
+		return true;
+	return false;
 }

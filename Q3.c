@@ -2,11 +2,11 @@
 
 MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 {
-	int i, j, rowNum, colNum;
+	int i, j;
 	SingleSourceMovesTree* source_moves_tree;
 	SingleSourceMovesList* source_optimal_move;
 	MultipleSourceMovesList* res;
-	checkersPos src = {0};
+	checkersPos src = { 0 };
 
 	res = (MultipleSourceMovesList*)malloc(sizeof(MultipleSourceMovesList));
 
@@ -26,8 +26,8 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 				src.col = COL_INT_TO_CHAR(j);
 				source_moves_tree = FindSingleSourceMoves(board, &src);
 				source_optimal_move = FindSingleSourceOptimalMove(source_moves_tree);
-				insertToEndOfMultipleSourceMovesList(res, source_optimal_move);
+				insertDataToEndOfMultipleSourceMovesList(res, source_optimal_move);
 			}
-	
+
 	return res;
 }

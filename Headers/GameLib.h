@@ -54,10 +54,12 @@ typedef unsigned char Board[BOARD_SIZE][BOARD_SIZE];
 typedef unsigned char Player;
 
 // Game Multifunctional Prototypes:
+
 void buildBoard(Board board);
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
 
 // Q1
+
 SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc);
 SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos* pSrc,
 	Player p, unsigned short numOfCaptures, bool isFirstMove);
@@ -66,11 +68,13 @@ checkersPos* createNewCheckersPos(int row, int col, Player p, int dir, int steps
 int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove);
 
 // Q2
+
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root);
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root);
 
 // Q3
+
 MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player);
 
 #endif // !__GAME_LIB_H

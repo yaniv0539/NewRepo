@@ -12,7 +12,10 @@ typedef struct SingleSourceMovesTree {
 	SingleSourceMovesTreeNode* source;
 } SingleSourceMovesTree; 
 
-// Basic tree prototypes:
+// Basic Tree prototypes:
+
+// Q1
+
 void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr);
 SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc, 
 	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[]);

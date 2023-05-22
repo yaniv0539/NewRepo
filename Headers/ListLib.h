@@ -23,6 +23,9 @@ typedef struct multipleSourceMovesList {
 } MultipleSourceMovesList;
 
 // Basic List prototypes:
+
+// Q2
+
 void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
@@ -30,11 +33,15 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 void removeSSMListCellFromStartList(SingleSourceMovesList* list);
 void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
-
-void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
-void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* tail);
-
 void printList(SingleSourceMovesList* lst); // ****TEST****
 void freeList(SingleSourceMovesList* lst);
+
+// Q3
+
+void insertCellToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail);
+void insertDataToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* data);
+MultipleSourceMovesListCell* createNewSingleSourceMovesList(SingleSourceMovesList* data, MultipleSourceMovesListCell* next);
+void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
+bool isEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
 
 #endif // !__LIST_LIB
