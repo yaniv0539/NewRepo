@@ -37,8 +37,12 @@
 #define COL_MOVE(p, dir) ( (p) == FIRST_PLAYER ) ? ( ( (dir) == RIGHT ) ? (RIGHT) : (LEFT - 1) ) :\
 												   ( ( (dir) == RIGHT ) ? (LEFT - 1) : (RIGHT) )
 #define ROW_MOVE(p) ((p) == FIRST_PLAYER) ? DOWN : UP
-#define ROW_CHAR_TO_NUM(row) ((row) - 'A')
-#define COL_CHAR_TO_NUM(col) ((col) - '1')
+
+#define ROW_CHAR_TO_INT(row) ((row) - 'A')
+#define COL_CHAR_TO_INT(col) ((col) - '1')
+
+#define ROW_INT_TO_CHAR(row) ((row) + 'A')
+#define COL_INT_TO_CHAR(col) ((col) + '1')
 
 typedef struct _checkersPos
 {
@@ -51,26 +55,22 @@ typedef unsigned char Player;
 
 // Game Multifunctional Prototypes:
 void buildBoard(Board board);
-void copyBoard(Board newBoard, Board oldBoard); // ***???***
-
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
-int getRowNum(char rowChar); // ***Delete because of Macro??***
-int getColNum(char colNum);  // ***Delete because of Macro??***
 
 // Q1
-Player getPlayerFromPos(Board board, checkersPos* pSrc);
 SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc);
 SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos* pSrc,
 	Player p, unsigned short numOfCaptures, bool isFirstMove);
-SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc,
-	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[]);
 void createNewBoard(Board res, Board oldBoard, checkersPos* pSrc, Player p, int dir, int steps);
+checkersPos* createNewCheckersPos(int row, int col, Player p, int dir, int steps);
 int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove);
-void createNewSrc(checkersPos* res, checkersPos* pSrc, Player p, int dir, int steps);
 
-//Q2
+// Q2
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root);
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root);
+
+// Q3
+MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player);
 
 #endif // !__GAME_LIB_H

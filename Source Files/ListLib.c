@@ -48,7 +48,6 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 
 }
 
-
 void removeSSMListCellFromStartList(SingleSourceMovesList* list)
 {
 	// If the list is empty, return
@@ -97,4 +96,21 @@ void checkListAllocation(SingleSourceMovesList* lst)
 		printf("memory allocation failed!");
 		exit(1);
 	}
+}
+
+void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail)
+{
+	if (isEmptyMultipleSourceMovesList(lst) == true)
+		lst->head = lst->tail = tail;
+	else
+	{
+		lst->tail->next = tail;
+		lst->tail = tail;
+	}
+	tail->next = NULL;
+}
+
+void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst)
+{
+	lst->head = lst->tail = NULL;
 }

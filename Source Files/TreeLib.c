@@ -19,29 +19,11 @@ SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, check
 		exit(1);
 	}
 
-	memcpy(newNode, board, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
-
-	newNode->pos = (checkersPos*)malloc(sizeof(checkersPos));
-
-	if (!(newNode->pos))
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
-
+	memcpy(newNode->board, board, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
 	newNode->pos = pSrc;
 	newNode->total_captures_so_far = numOfCaptures;
-
-	if (next_moves == NULL)
-	{
-		newNode->next_moves[LEFT] = NULL;
-		newNode->next_moves[RIGHT] = NULL;
-	}
-	else
-	{
-		newNode->next_moves[LEFT] = next_moves[LEFT];
-		newNode->next_moves[RIGHT] = next_moves[RIGHT];
-	}
+	newNode->next_moves[LEFT] = next_moves[LEFT];
+	newNode->next_moves[RIGHT] = next_moves[RIGHT];
 
 	return newNode;
 }

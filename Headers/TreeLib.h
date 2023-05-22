@@ -14,10 +14,8 @@ typedef struct SingleSourceMovesTree {
 
 // Basic tree prototypes:
 void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr);
-
 SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc, 
 	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[]);
-
 
 // include Board, checkersPos (Game.h ?)
 

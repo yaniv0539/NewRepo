@@ -46,19 +46,13 @@ void buildBoard(Board board)
 	//board[7][6] = SECOND_PLAYER;
 }
 
-// Makes empty single source moves tree by initialized to NULL
-void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr)
-{
-	tr->source = NULL;
-}
-
 // Gets the player name from position.
 Player getPlayerFromPos(Board board, checkersPos* pSrc)
 {
 	int rowNum, colNum;
 
-	rowNum = ROW_CHAR_TO_NUM(pSrc->row);
-	colNum = COL_CHAR_TO_NUM(pSrc->col);
+	rowNum = ROW_CHAR_TO_INT(pSrc->row);
+	colNum = COL_CHAR_TO_INT(pSrc->col);
 
 	return board[rowNum][colNum];
 }
@@ -95,7 +89,7 @@ SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos*
 {
 	SingleSourceMovesTreeNode* next_moves[2] = { NULL };
 	int rightRoute, leftRoute;
-	checkersPos rightSrc, leftSrc;
+	checkersPos* rightSrc, * leftSrc;
 	Board rightBoard, leftBoard;
 
 	rightRoute = checkDiagonal(board, pSrc, p, numOfCaptures, RIGHT, isFirstMove);
@@ -103,59 +97,19 @@ SingleSourceMovesTreeNode* FindSingleSourceMovesHelper(Board board, checkersPos*
 
 	if (rightRoute != STUCK)
 	{
-		createNewSrc(&rightSrc, pSrc, p, RIGHT, rightRoute);
+		rightSrc = createNewCheckersPos(pSrc->row, pSrc->col, p, RIGHT, rightRoute);
 		createNewBoard(rightBoard, board, pSrc, p, RIGHT, rightRoute);
-		next_moves[RIGHT] = FindSingleSourceMovesHelper(rightBoard, &rightSrc, p, numOfCaptures + ISWITHCAPTURE(rightRoute), false);
+		next_moves[RIGHT] = FindSingleSourceMovesHelper(rightBoard, rightSrc, p, numOfCaptures + ISWITHCAPTURE(rightRoute), false);
 	}
 
 	if (leftRoute != STUCK)
 	{
-		createNewSrc(&leftSrc, pSrc, p, LEFT, leftRoute);
+		leftSrc = createNewCheckersPos(pSrc->row, pSrc->col, p, LEFT, leftRoute);
 		createNewBoard(leftBoard, board, pSrc, p, LEFT, leftRoute);
-		next_moves[LEFT] = FindSingleSourceMovesHelper(leftBoard, &leftSrc, p, numOfCaptures + ISWITHCAPTURE(leftRoute), false);
+		next_moves[LEFT] = FindSingleSourceMovesHelper(leftBoard, leftSrc, p, numOfCaptures + ISWITHCAPTURE(leftRoute), false);
 	}
 
 	return createNewSingleSourceMovesTreeNode(board, pSrc, numOfCaptures, next_moves);
-}
-
-// Creates new single source move tree node by assimilate inside: The board, his source position,
-// number of captures so far and array with his next possible moves.
-SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, checkersPos* pSrc,
-	unsigned short numOfCaptures, SingleSourceMovesTreeNode* next_moves[])
-{
-	SingleSourceMovesTreeNode* newNode = (SingleSourceMovesTreeNode*)malloc(sizeof(SingleSourceMovesTreeNode));
-
-	if (!newNode)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
-
-	memcpy(newNode, board, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
-
-	newNode->pos = (checkersPos*)malloc(sizeof(checkersPos));
-
-	if (!(newNode->pos))
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
-
-	newNode->pos = pSrc;
-	newNode->total_captures_so_far = numOfCaptures;
-
-	if (next_moves == NULL)
-	{
-		newNode->next_moves[LEFT] = NULL;
-		newNode->next_moves[RIGHT] = NULL;
-	}
-	else
-	{
-		newNode->next_moves[LEFT] = next_moves[LEFT];
-		newNode->next_moves[RIGHT] = next_moves[RIGHT];
-	}
-
-	return newNode;
 }
 
 // Creates new board by the data that was given - Old borad, new Board, player, his direction and how many steps he moved.
@@ -163,8 +117,8 @@ void createNewBoard(Board res, Board oldBoard, checkersPos* pSrc, Player p, int 
 {
 	int rowNum, colNum;
 
-	rowNum = ROW_CHAR_TO_NUM(pSrc->row);
-	colNum = COL_CHAR_TO_NUM(pSrc->col);
+	rowNum = ROW_CHAR_TO_INT(pSrc->row);
+	colNum = COL_CHAR_TO_INT(pSrc->col);
 
 	memcpy(res, oldBoard, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
 
@@ -174,13 +128,32 @@ void createNewBoard(Board res, Board oldBoard, checkersPos* pSrc, Player p, int 
 		res[rowNum + (ROW_MOVE(p))][colNum + (COL_MOVE(p, dir))] = ' ';
 }
 
+// Creates new position by the data that was given - row, column, player, his direction and how many steps he wants to move. 
+checkersPos* createNewCheckersPos(int row, int col, Player p, int dir, int steps)
+{
+	checkersPos* res;
+
+	res = (checkersPos*)malloc(sizeof(checkersPos));
+
+	if (!res)
+	{
+		printf("Memory Allocation Failure!!!");
+		exit(1);
+	}
+
+	res->row = row + (ROW_MOVE(p) * steps);
+	res->col = col + (COL_MOVE(p, dir) * steps);
+
+	return res;
+}
+
 // Checks the all possible routes for specific source on board. 
 int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove)
 {
 	int rowNum, colNum;
 
-	rowNum = ROW_CHAR_TO_NUM(pSrc->row);
-	colNum = COL_CHAR_TO_NUM(pSrc->col);
+	rowNum = ROW_CHAR_TO_INT(pSrc->row);
+	colNum = COL_CHAR_TO_INT(pSrc->col);
 
 	// Checks if not first move and didn't capture yet.
 	if (!numOfCaptures && !isFirstMove)
@@ -215,11 +188,4 @@ int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOf
 		return MOVE_WITH_CAPTURE;
 
 	return STUCK;
-}
-
-// Creates new position by the data that was given - player, his direction and how many steps he wants to move. 
-void createNewSrc(checkersPos* res, checkersPos* pSrc, Player p, int dir, int steps)
-{
-	res->row = pSrc->row + (ROW_MOVE(p) * steps);
-	res->col = pSrc->col + (COL_MOVE(p, dir) * steps);
 }
