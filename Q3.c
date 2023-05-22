@@ -16,7 +16,7 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 		exit(1);
 	}
 
-	makeEmptyMultipleSourceMovesList(&res);
+	makeEmptyMultipleSourceMovesList(res);
 
 	for (i = 0; i < BOARD_SIZE; i++)
 		for (j = 0; j < BOARD_SIZE; j++)

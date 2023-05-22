@@ -32,7 +32,7 @@ void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
 
 void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
-void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail);
+void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* tail);
 
 void printList(SingleSourceMovesList* lst); // ****TEST****
 void freeList(SingleSourceMovesList* lst);

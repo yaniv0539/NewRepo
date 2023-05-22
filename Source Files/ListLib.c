@@ -98,7 +98,7 @@ void checkListAllocation(SingleSourceMovesList* lst)
 	}
 }
 
-void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail)
+void insertToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* tail)
 {
 	if (isEmptyMultipleSourceMovesList(lst) == true)
 		lst->head = lst->tail = tail;
