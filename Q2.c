@@ -11,14 +11,13 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 	checkListAllocation(bestPath);
 	makeEmptySSMList(bestPath);
 
-	bool isMainPiece = true;
 	if (p == 'T')
 	{
-		bestPath = FindSingleSourceOptimalMoveHelperT(moves_tree->source, isMainPiece);
+		bestPath = FindSingleSourceOptimalMoveHelperT(moves_tree->source);
 	}
 	else if (p == 'B')
 	{
-		bestPath = FindSingleSourceOptimalMoveHelperB(moves_tree->source, isMainPiece);
+		bestPath = FindSingleSourceOptimalMoveHelperB(moves_tree->source);
 	}
 
 	removeSSMListCellFromStartList(bestPath);
@@ -46,8 +45,8 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeN
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
-	lstL = FindSingleSourceOptimalMoveHelperT(root->next_moves[0], false);
-	lstR = FindSingleSourceOptimalMoveHelperT(root->next_moves[1], false);
+	lstL = FindSingleSourceOptimalMoveHelperT(root->next_moves[0]);
+	lstR = FindSingleSourceOptimalMoveHelperT(root->next_moves[1]);
 
 	if (lstL->head == NULL || lstR->head == NULL)
 	{
@@ -80,7 +79,7 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeN
 		freeList(&lstR);
 		return lstL;
 	}
-	
+
 }
 
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root)
@@ -101,8 +100,8 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeN
 	makeEmptySSMList(lstL);
 	makeEmptySSMList(lstR);
 
-	lstL = FindSingleSourceOptimalMoveHelperB(root->next_moves[0], false);
-	lstR = FindSingleSourceOptimalMoveHelperB(root->next_moves[1], false);
+	lstL = FindSingleSourceOptimalMoveHelperB(root->next_moves[0]);
+	lstR = FindSingleSourceOptimalMoveHelperB(root->next_moves[1]);
 
 	if (lstL->head == NULL || lstR->head == NULL)
 	{
