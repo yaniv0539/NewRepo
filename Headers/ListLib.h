@@ -1,4 +1,7 @@
-typedef struct _SingleSourceMovesListCell {
+#ifndef __LIST_LIB
+#define __LIST_LIB
+
+struct _SingleSourceMovesListCell {
 	checkersPos* position;
 	unsigned short captures;
 	struct _SingleSourceMovesListCell* next;
@@ -19,3 +22,5 @@ void removeSSMListCellFromEndList(SingleSourceMovesList* list); // DELETE
 void freeList(SingleSourceMovesList* lst);
 void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
+
+#endif // !__LIST_LIB
