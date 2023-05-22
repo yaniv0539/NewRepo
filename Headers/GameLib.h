@@ -51,11 +51,11 @@ typedef unsigned char Player;
 
 // Game Multifunctional Prototypes:
 void buildBoard(Board board);
-void copyBoard(Board newBoard, Board oldBoard); // ???
+void copyBoard(Board newBoard, Board oldBoard); // ***???***
 
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
-int getRowNum(char rowChar); // Delete because of Macro??
-int getColNum(char colNum); // Delete because of Macro??
+int getRowNum(char rowChar); // ***Delete because of Macro??***
+int getColNum(char colNum);  // ***Delete because of Macro??***
 
 // Q1
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
