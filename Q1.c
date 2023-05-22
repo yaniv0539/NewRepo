@@ -132,6 +132,15 @@ SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, check
 	}
 
 	memcpy(newNode, board, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
+
+	newNode->pos = (checkersPos*)malloc(sizeof(checkersPos));
+
+	if (!(newNode->pos))
+	{
+		printf("Memory Allocation Failure!!!");
+		exit(1);
+	}
+
 	newNode->pos = pSrc;
 	newNode->total_captures_so_far = numOfCaptures;
 
