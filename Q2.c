@@ -26,7 +26,6 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 
 }
 
-
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root)
 {
 	if (root == NULL)
@@ -76,10 +75,11 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeN
 	{
 		SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
 		insertSSMListCellToStartList(lstL, newCell);
-		freeList(&lstR);
+		freeList(lstR);
 		return lstL;
 	}
 
+	return NULL;
 }
 
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root)
@@ -135,8 +135,8 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeN
 		return lstL;
 	}
 
+	return NULL;
 }
-
 
 void makeEmptySSMList(SingleSourceMovesList* lst)
 {
@@ -156,9 +156,15 @@ SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned 
 {
 	SingleSourceMovesListCell* newNode;
 	newNode = (SingleSourceMovesListCell*)malloc(sizeof(SingleSourceMovesListCell));
-	checkCellAllocation(newNode);
 
-	newNode->position = malloc(sizeof(checkersPos));
+	if (!newNode)
+	{
+		printf("Memory Allocation Failure!!!");
+		exit(1);
+	}
+
+	newNode->position = (checkersPos*)malloc(sizeof(checkersPos));
+
 	if (!newNode->position) {
 		printf("Memory Allocation Failure!!!");
 		exit(1);
@@ -186,7 +192,6 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 
 }
 
-
 void removeSSMListCellFromStartList(SingleSourceMovesList* list)
 {
 	// If the list is empty, return
@@ -205,7 +210,7 @@ void removeSSMListCellFromStartList(SingleSourceMovesList* list)
 	list->head = list->head->next;
 
 	free(temp);
-	
+
 }
 
 void freeList(SingleSourceMovesList* lst)
@@ -221,30 +226,12 @@ void freeList(SingleSourceMovesList* lst)
 	lst->tail = NULL;
 }
 
-void checkCellAllocation(SingleSourceMovesListCell* cell)
-{
-	if (cell == NULL) {
-		printf("memory allocation failed!");
-		exit(1);
-	}
-}
-
 void checkListAllocation(SingleSourceMovesList* lst)
 {
 	if (lst == NULL) {
 		printf("memory allocation failed!");
 		exit(1);
 	}
-}
-
-Player getPlayerFromPos(Board board, checkersPos* pSrc)
-{
-	int rowNum, colNum;
-
-	rowNum = ROW_CHAR_TO_NUM(pSrc->row);
-	colNum = COL_CHAR_TO_NUM(pSrc->col);
-
-	return board[rowNum][colNum];
 }
 
 //  ****TEST****

@@ -84,14 +84,6 @@ void freeList(SingleSourceMovesList* lst)
 	lst->tail = NULL;
 }
 
-void checkCellAllocation(SingleSourceMovesListCell* cell)
-{
-	if (cell == NULL) {
-		printf("memory allocation failed!");
-		exit(1);
-	}
-}
-
 void checkListAllocation(SingleSourceMovesList* lst)
 {
 	if (lst == NULL) {

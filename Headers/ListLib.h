@@ -31,7 +31,6 @@ bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
 void removeSSMListCellFromStartList(SingleSourceMovesList* list);
-void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
 void printList(SingleSourceMovesList* lst); // ****TEST****
 void freeList(SingleSourceMovesList* lst);
