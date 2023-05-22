@@ -22,7 +22,7 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 		for (j = 0; j < BOARD_SIZE; j++)
 			if (board[i][j] == player)
 			{
-				src.row = COL_INT_TO_CHAR(i);
+				src.row = ROW_INT_TO_CHAR(i);
 				src.col = COL_INT_TO_CHAR(j);
 				source_moves_tree = FindSingleSourceMoves(board, &src);
 				source_optimal_move = FindSingleSourceOptimalMove(source_moves_tree);
