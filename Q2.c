@@ -1,84 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-#define BOARD_SIZE 8
-
-#define FIRST_PLAYER 'T'
-#define SECOND_PLAYER 'B'
-#define EMPTY_PLACE ' '
-
-#define LEFT 0
-#define RIGHT 1
-
-#define SINGLE_MOVE 1
-#define DOUBLE_MOVE 2
-
-#define STUCK 0
-#define MOVE_WITHOUT_CAPTURE 1
-#define MOVE_WITH_CAPTURE 2
-
-#define FIRST_COL 0
-#define SECOND_COL 1
-#define FIRST_ROW 0
-#define SECOND_ROW 1
-
-typedef struct _checkersPos
-{
-	char row, col;
-}checkersPos;
-
-typedef unsigned char Board[BOARD_SIZE][BOARD_SIZE];
-
-typedef unsigned char Player;
-
-typedef struct _SingleSourceMovesTreeNode {
-	Board board;
-	checkersPos* pos;
-	unsigned short total_captures_so_far; // מספר דילוגים עד כה
-	struct _SingleSourceMovesTreeNode* next_moves[2]; //יעדי תנועה
-
-}SingleSourceMovesTreeNode;
-
-typedef struct _SingleSourceMovesTree {
-	SingleSourceMovesTreeNode* source;
-}SingleSourceMovesTree;
-
-typedef struct _SingleSourceMovesListCell {
-	checkersPos* position;
-	unsigned short captures;
-	struct _SingleSourceMovesListCell* next;
-}SingleSourceMovesListCell;
-
-typedef struct _SingleSoourceMovesList {
-	SingleSourceMovesListCell* head;
-	SingleSourceMovesListCell* tail;
-}SingleSourceMovesList;
-
-
-// Functions I created, Declarations:
-SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root);
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root);
-
-void printList(SingleSourceMovesList* lst); // ****TEST****
-
-
-void makeEmptySSMList(SingleSourceMovesList* lst);
-bool isEmptyList(SingleSourceMovesList* lst);
-SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
-void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void removeSSMListCellFromStartList(SingleSourceMovesList* list); 
-void freeList(SingleSourceMovesList* lst);
-void checkCellAllocation(SingleSourceMovesListCell* cell);
-void checkListAllocation(SingleSourceMovesList* lst);
-
-Player getPlayerFromPos(Board board, checkersPos* pSrc);
-int getRowNum(char rowChar);
-int getColNum(char colNum);
-//
-
+#include <GameLib.h>
 
 
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree)
@@ -316,6 +236,16 @@ void checkListAllocation(SingleSourceMovesList* lst)
 		printf("memory allocation failed!");
 		exit(1);
 	}
+}
+
+Player getPlayerFromPos(Board board, checkersPos* pSrc)
+{
+	int rowNum, colNum;
+
+	rowNum = ROW_CHAR_TO_NUM(pSrc->row);
+	colNum = COL_CHAR_TO_NUM(pSrc->col);
+
+	return board[rowNum][colNum];
 }
 
 //  ****TEST****

@@ -17,10 +17,11 @@ void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void copyList(SingleSourceMovesList* dest, SingleSourceMovesList* src); // DELETE
-void removeSSMListCellFromEndList(SingleSourceMovesList* list); // DELETE
+void removeSSMListCellFromStartList(SingleSourceMovesList* list);
 void freeList(SingleSourceMovesList* lst);
 void checkCellAllocation(SingleSourceMovesListCell* cell);
 void checkListAllocation(SingleSourceMovesList* lst);
+
+void printList(SingleSourceMovesList* lst); // ****TEST****
 
 #endif // !__LIST_LIB

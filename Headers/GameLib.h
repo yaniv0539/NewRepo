@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <Tree.h>
+
+#include <TreeLib.h>
+#include <ListLib.h>
 
 #define BOARD_SIZE 8
 
@@ -47,13 +49,13 @@ typedef unsigned char Board[BOARD_SIZE][BOARD_SIZE];
 
 typedef unsigned char Player;
 
-// Game Prototypes:
+// Game Multifunctional Prototypes:
 void buildBoard(Board board);
-void copyBoard(Board newBoard, Board oldBoard);
+void copyBoard(Board newBoard, Board oldBoard); // ???
 
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
-int getRowNum(char rowChar);
-int getColNum(char colNum);
+int getRowNum(char rowChar); // Delete because of Macro??
+int getColNum(char colNum); // Delete because of Macro??
 
 // Q1
 Player getPlayerFromPos(Board board, checkersPos* pSrc);
@@ -65,5 +67,10 @@ SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, check
 void createNewBoard(Board res, Board oldBoard, checkersPos* pSrc, Player p, int dir, int steps);
 int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOfCaptures, int dir, bool isFirstMove);
 void createNewSrc(checkersPos* res, checkersPos* pSrc, Player p, int dir, int steps);
+
+//Q2
+SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
+SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root);
+SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root);
 
 #endif // !__GAME_LIB_H
