@@ -16,7 +16,7 @@ typedef struct Stats {
 }STATS;
 
 //Q4
-void Turn(Board board, Player player);
+//void Turn(Board board, Player player);
 //
 
 void PlayGame(Board board, Player starting_player);
@@ -181,7 +181,4 @@ void printStats(STATS stats)
 	printf("%c performed the highest number of captures in a single move - %d\n", stats.best_capture_player, stats.best_capture);
 }
 //
-void Turn(Board board, Player player) {
-
-}
 //
