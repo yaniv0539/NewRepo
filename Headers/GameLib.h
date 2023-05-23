@@ -33,6 +33,8 @@
 #define FIRST_ROW 0
 #define SECOND_ROW 1
 
+#define NO_MOVES_AT_ALL -1
+
 #define ISWITHCAPTURE(toCapture) (((toCapture) == (MOVE_WITH_CAPTURE)) ? 1 : 0)
 #define COL_MOVE(p, dir) ( (p) == FIRST_PLAYER ) ? ( ( (dir) == RIGHT ) ? (RIGHT) : (LEFT - 1) ) :\
 												   ( ( (dir) == RIGHT ) ? (LEFT - 1) : (RIGHT) )
@@ -43,6 +45,11 @@
 
 #define ROW_INT_TO_CHAR(row) ((row) + 'A')
 #define COL_INT_TO_CHAR(col) ((col) + '1')
+
+#define BOARD_PRINT_SIZE 19
+#define MAX_CAPTURES 12
+
+#define SWITCH_PLAYER(player) ((player) == (FIRST_PLAYER)) ? (player = SECOND_PLAYER) : (player = FIRST_PLAYER)
 
 typedef struct _checkersPos
 {
@@ -80,7 +87,18 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player);
 // Q4
 
 void Turn(Board board, Player player);
-bool isReallyCurrSourceTheBest(Player player, MultipleSourceMovesListCell* source_best_move, MultipleSourceMovesListCell* player_best_move);
+SingleSourceMovesList* getBestListForPlayer(Board board, Player player);
+bool isCurrSourceTheBest(Player player, MultipleSourceMovesListCell* source_best_move,
+	MultipleSourceMovesListCell* player_best_move, int max_captures, int curr_source_best_captures);
+bool hasValidMove(MultipleSourceMovesListCell* source_best_move);
 void updateBoard(Board board, SingleSourceMovesTreeNode* source, checkersPos* pSrc);
+
+// Q5
+
+void PlayGame(Board board, Player starting_player);
+void printBoard(Board board);
+bool checkWinner(Board board, STATS stats);
+void addStats(STATS* stats, Player currPlayer, SingleSourceMovesList* lst);
+void printStats(STATS stats);
 
 #endif // !__GAME_LIB_H
