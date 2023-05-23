@@ -95,7 +95,9 @@ void printBoard(Board board)
 
 bool checkWinner(Board board)
 {
+	// Check first and last row, to see if a player has reached to the end
 
+	// Check players' capture counters, to see if other player's pieces are no more
 }
 
 void printStats(STATS stats)
