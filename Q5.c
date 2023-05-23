@@ -15,9 +15,6 @@ typedef struct Stats {
 	int best_capture;
 }STATS;
 
-//Q4
-//void Turn(Board board, Player player);
-//
 
 void PlayGame(Board board, Player starting_player);
 void printBoard(Board board);
@@ -48,7 +45,7 @@ void PlayGame(Board board, Player starting_player)
 		addStats(&stats, currPlayer, bestList);
 
 		printf("%c's turn:\n", currPlayer);
-		printf("%c%c->%c%c", bestList->head->position->row, bestList->head->position->col,
+		printf("%c%c->%c%c\n", bestList->head->position->row, bestList->head->position->col,
 			bestList->tail->position->row, bestList->tail->position->col);  //C8->D7
 		printBoard(board);
 
@@ -180,5 +177,3 @@ void printStats(STATS stats)
 
 	printf("%c performed the highest number of captures in a single move - %d\n", stats.best_capture_player, stats.best_capture);
 }
-//
-//
