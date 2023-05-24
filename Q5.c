@@ -2,53 +2,52 @@
 
 void PlayGame(Board board, Player starting_player)
 {
+	int pNum = 0;
 	bool hasWinner = false;
-	Player currPlayer;
 	SingleSourceMovesList* bestList;
+	STATS players_stats[2] = { 0 };
 
-	currPlayer = starting_player;
-	STATS stats = { EMPTY_PLACE , 0 , 0 , EMPTY_PLACE, 0 };
+	players_stats[pNum].player = starting_player;
+
+	if (starting_player == FIRST_PLAYER)
+		players_stats[pNum + 1].player = SECOND_PLAYER;
+	else
+		players_stats[pNum + 1].player = FIRST_PLAYER;
+
 	printBoard(board);
 
 	while (!hasWinner)
 	{
-		bestList = getBestListForPlayer(board, currPlayer);
-		Turn(board, currPlayer);
-		addStats(&stats, currPlayer, bestList);
+		bestList = getBestListForPlayer(board, players_stats[pNum].player);
+		Turn(board, players_stats[pNum].player);
+		addStats(players_stats, pNum, bestList);
 
-		printf("%c's turn:\n", currPlayer);
+		printf("%c's turn:\n", players_stats[pNum].player);
 		printf("%c%c->%c%c\n", bestList->head->position->row, bestList->head->position->col,
-			bestList->tail->position->row, bestList->tail->position->col);  //C8->D7
+			bestList->tail->position->row, bestList->tail->position->col);
 		printBoard(board);
 
-		if (checkWinner(board, stats))
+		if (checkWinner(board, players_stats))
 		{
 			hasWinner = true;
-			stats.winner = currPlayer;
+			break;
 		}
-		SWITCH_PLAYER(currPlayer);
+
+		SWITCH_PLAYER(pNum);
 	}
 
-	printStats(stats);
+	printStats(players_stats, pNum);
 }
 
-void addStats(STATS* stats, Player currPlayer, SingleSourceMovesList* lst)
+void addStats(STATS* players_stats, int pNum, SingleSourceMovesList* lst)
 {
-	int captures;
-	captures = lst->tail->captures;
+	int captures = lst->tail->captures;
 
-	// Add to total captures
-	if (currPlayer == FIRST_PLAYER)
-		stats->total_captures_first += captures;
-	else
-		stats->total_captures_second += captures;
+	players_stats[pNum].total_moves++;
+	players_stats[pNum].total_captures += captures;
 
-	// Check best captures in one move
-	if (captures > stats->best_capture)
-	{
-		stats->best_capture = captures;
-		stats->best_capture_player = currPlayer;
-	}
+	if (captures > players_stats[pNum].best_capture)
+		players_stats[pNum].best_capture = captures;
 }
 
 void printBoard(Board board)
@@ -86,31 +85,33 @@ void printBoard(Board board)
 	printf("\n");
 }
 
-bool checkWinner(Board board, STATS stats)
+bool checkWinner(Board board, STATS* players_stats)
 {
 	int col;
 	// Check first and last row, to see if a player has reached to the end
 	for (col = 0; col < BOARD_SIZE; col++)
-	{
-		if (board[FIRST_ROW][col] == SECOND_PLAYER || board[BOARD_SIZE - 1][col] == FIRST_PLAYER)
+		if (board[FIRST_ROW][col] == SECOND_PLAYER || board[LAST_ROW][col] == FIRST_PLAYER)
 			return true;
-	}
 
 	// Check players' capture counters, to see if other player's pieces are no more
-	if (stats.total_captures_first == MAX_CAPTURES || stats.total_captures_second == MAX_CAPTURES)
+	if (players_stats[0].best_capture == MAX_CAPTURES || players_stats[1].best_capture == MAX_CAPTURES)
 		return true;
 
 	return false;
 }
 
-void printStats(STATS stats)
+void printStats(STATS* players_stats, int pNum)
 {
-	printf("%c wins!\n", stats.winner);
+	int best_capturer_ind;
 
-	if (stats.winner == FIRST_PLAYER)
-		printf("%c performed %d moves.\n", stats.winner, stats.total_captures_first);
+	printf("%c wins!\n", players_stats[pNum].player);
+	printf("%c performed %d moves.\n", players_stats[pNum].player, players_stats[pNum].total_moves);
+
+	if (players_stats[0].best_capture > players_stats[1].best_capture)
+		best_capturer_ind = 0;
 	else
-		printf("%c performed %d moves.\n", stats.winner, stats.total_captures_second);
+		best_capturer_ind = 1;
 
-	printf("%c performed the highest number of captures in a single move - %d\n", stats.best_capture_player, stats.best_capture);
+	printf("%c performed the highest number of captures in a single move - %d\n",
+		players_stats[best_capturer_ind].player, players_stats[best_capturer_ind].best_capture);
 }

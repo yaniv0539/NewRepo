@@ -112,7 +112,7 @@ void createNewBoard(Board res, Board oldBoard, checkersPos* pSrc, Player p, int 
 	memcpy(res, oldBoard, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
 
 	res[rowNum][colNum] = ' ';
-	res[rowNum + (ROW_MOVE(p) * steps)][colNum + (COL_MOVE(p, dir) * steps)] = p;
+	res[rowNum + ((ROW_MOVE(p)) * steps)][colNum + ((COL_MOVE(p, dir)) * steps)] = p;
 	if (steps == DOUBLE_MOVE)
 		res[rowNum + (ROW_MOVE(p))][colNum + (COL_MOVE(p, dir))] = ' ';
 }
@@ -130,8 +130,8 @@ checkersPos* createNewCheckersPos(int row, int col, Player p, int dir, int steps
 		exit(1);
 	}
 
-	res->row = row + (ROW_MOVE(p) * steps);
-	res->col = col + (COL_MOVE(p, dir) * steps);
+	res->row = row + ((ROW_MOVE(p)) * steps);
+	res->col = col + ((COL_MOVE(p, dir)) * steps);
 
 	return res;
 }

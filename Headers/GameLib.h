@@ -7,9 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <TreeLib.h>
-#include <ListLib.h>
-
 #define BOARD_SIZE 8
 
 #define FIRST_PLAYER 'T'
@@ -48,8 +45,10 @@
 
 #define BOARD_PRINT_SIZE 19
 #define MAX_CAPTURES 12
+#define FIRST_ROW 0 // Exists already in GameLib
+#define LAST_ROW 7
 
-#define SWITCH_PLAYER(player) ((player) == (FIRST_PLAYER)) ? (player = SECOND_PLAYER) : (player = FIRST_PLAYER)
+#define SWITCH_PLAYER(pNum) ((pNum) == (0)) ? ((pNum) = (1)) : ((pNum) = (0))
 
 typedef struct _checkersPos
 {
@@ -77,8 +76,8 @@ int checkDiagonal(Board board, checkersPos* pSrc, Player p, unsigned short numOf
 // Q2
 
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree);
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root);
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root);
+SingleSourceMovesList* FindSingleSourceOptimalMoveHelper(SingleSourceMovesTreeNode* root, Player p);
+bool isRightListBetter(SingleSourceMovesList* right_list, SingleSourceMovesList* left_list, Player p);
 
 // Q3
 
@@ -96,9 +95,9 @@ void updateBoard(Board board, SingleSourceMovesTreeNode* source, checkersPos* pS
 // Q5
 
 void PlayGame(Board board, Player starting_player);
+void addStats(STATS* players_stats, int pNum, SingleSourceMovesList* lst);
 void printBoard(Board board);
-bool checkWinner(Board board, STATS stats);
-void addStats(STATS* stats, Player currPlayer, SingleSourceMovesList* lst);
-void printStats(STATS stats);
+bool checkWinner(Board board, STATS* players_stats);
+void printStats(STATS* players_stats, int pNum);
 
 #endif // !__GAME_LIB_H

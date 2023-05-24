@@ -1,141 +1,59 @@
 #include <GameLib.h>
 
-
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree)
 {
 	Player p;
 	p = getPlayerFromPos(moves_tree->source->board, moves_tree->source->pos);
-
-	SingleSourceMovesList* bestPath;
-	bestPath = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-	checkListAllocation(bestPath);
-	makeEmptySSMList(bestPath);
-
-	if (p == 'T')
-	{
-		bestPath = FindSingleSourceOptimalMoveHelperT(moves_tree->source);
-	}
-	else if (p == 'B')
-	{
-		bestPath = FindSingleSourceOptimalMoveHelperB(moves_tree->source);
-	}
-
-	//removeSSMListCellFromStartList(bestPath);
-
-	return bestPath;
-
+	return FindSingleSourceOptimalMoveHelper(moves_tree->source, p);
 }
 
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperT(SingleSourceMovesTreeNode* root)
+SingleSourceMovesList* FindSingleSourceOptimalMoveHelper(SingleSourceMovesTreeNode* root, Player p)
 {
+	SingleSourceMovesList* res, * left_list, * right_list;
+	SingleSourceMovesListCell* newCell;
+
+	res = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
+	checkListAllocation(res);
+	makeEmptySSMList(res);
+
 	if (root == NULL)
+		return res;
+
+	left_list = FindSingleSourceOptimalMoveHelper(root->next_moves[LEFT], p);
+	right_list = FindSingleSourceOptimalMoveHelper(root->next_moves[RIGHT], p);
+
+	if (isRightListBetter(right_list, left_list, p))
 	{
-		SingleSourceMovesList* lst = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-		checkListAllocation(lst);
-		makeEmptySSMList(lst);
-		return lst;
+		res = right_list;
+		free(left_list);
+	}
+	else
+	{
+		res = left_list;
+		free(right_list);
 	}
 
-	SingleSourceMovesList* lstL, * lstR;
-	lstL = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-	checkListAllocation(lstL);
-	lstR = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-	checkListAllocation(lstR);
-	makeEmptySSMList(lstL);
-	makeEmptySSMList(lstR);
-
-	lstL = FindSingleSourceOptimalMoveHelperT(root->next_moves[0]);
-	lstR = FindSingleSourceOptimalMoveHelperT(root->next_moves[1]);
-
-	if (lstL->head == NULL || lstR->head == NULL)
-	{
-		if (lstR->head == NULL)
-		{
-			SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-			insertSSMListCellToStartList(lstL, newCell);
-			freeList(lstR);
-			return lstL;
-		}
-		else if (lstL->head == NULL)
-		{
-			SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-			insertSSMListCellToStartList(lstR, newCell);
-			freeList(lstL);
-			return lstR;
-		}
-	}
-	else if (lstL->tail->captures <= lstR->tail->captures)
-	{
-		SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lstR, newCell);
-		freeList(lstL);
-		return lstR;
-	}
-	else if (lstL->tail->captures > lstR->tail->captures)
-	{
-		SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lstL, newCell);
-		freeList(lstR);
-		return lstL;
-	}
-
-	return NULL;
+	newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
+	insertSSMListCellToStartList(res, newCell);
+	return res;
 }
 
-SingleSourceMovesList* FindSingleSourceOptimalMoveHelperB(SingleSourceMovesTreeNode* root)
+bool isRightListBetter(SingleSourceMovesList* right_list, SingleSourceMovesList* left_list, Player p)
 {
-	if (root == NULL)
-	{
-		SingleSourceMovesList* lst = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-		checkListAllocation(lst);
-		makeEmptySSMList(lst);
-		return lst;
-	}
+	int right_captures, left_captures;
 
-	SingleSourceMovesList* lstL, * lstR;
-	lstL = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-	checkListAllocation(lstL);
-	lstR = (SingleSourceMovesList*)malloc(sizeof(SingleSourceMovesList));
-	checkListAllocation(lstR);
-	makeEmptySSMList(lstL);
-	makeEmptySSMList(lstR);
+	if (left_list->tail == NULL)
+		return true;
 
-	lstL = FindSingleSourceOptimalMoveHelperB(root->next_moves[0]);
-	lstR = FindSingleSourceOptimalMoveHelperB(root->next_moves[1]);
+	if (right_list->tail == NULL)
+		return false;
 
-	if (lstL->head == NULL || lstR->head == NULL)
-	{
-		if (lstL->head == NULL)
-		{
-			SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-			insertSSMListCellToStartList(lstR, newCell);
-			freeList(lstL);
-			return lstR;
-		}
-		else if (lstR->head == NULL)
-		{
-			SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-			insertSSMListCellToStartList(lstL, newCell);
-			freeList(lstR);
-			return lstL;
-		}
-	}
-	else if (lstL->tail->captures <= lstR->tail->captures)
-	{
-		SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lstR, newCell);
-		freeList(lstL);
-		return lstR;
-	}
-	else if (lstL->tail->captures > lstR->tail->captures)
-	{
-		SingleSourceMovesListCell* newCell = createNewSSMListCell(root->pos, root->total_captures_so_far, NULL);
-		insertSSMListCellToStartList(lstL, newCell);
-		freeList(lstR);
-		return lstL;
-	}
+	right_captures = right_list->tail->captures;
+	left_captures = left_list->tail->captures;
 
-	return NULL;
+	if (right_captures == left_captures)
+		return p == FIRST_PLAYER;
+	return right_captures > left_captures;
 }
 
 void makeEmptySSMList(SingleSourceMovesList* lst)

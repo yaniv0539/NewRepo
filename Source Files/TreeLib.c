@@ -1,6 +1,6 @@
 #include <TreeLib.h>
 
-// Q1
+// Trees Functions
 
 // Makes empty single source moves tree by initialized to NULL
 void makeEmptySingleSourceMovesTree(SingleSourceMovesTree* tr)
