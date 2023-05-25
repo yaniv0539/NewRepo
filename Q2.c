@@ -1,5 +1,6 @@
 #include <GameLib.h>
 
+// This function gets a tree that represents optianl moves for a piece, and returns the optimal move as a SingleSourceMovesList 
 SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_tree)
 {
 	Player p;
@@ -7,6 +8,7 @@ SingleSourceMovesList* FindSingleSourceOptimalMove(SingleSourceMovesTree* moves_
 	return FindSingleSourceOptimalMoveHelper(moves_tree->source, p);
 }
 
+// This function is a helper to the previous. It gets the piece type an returns the optimal move as a SingleSourceMovesList
 SingleSourceMovesList* FindSingleSourceOptimalMoveHelper(SingleSourceMovesTreeNode* root, Player p)
 {
 	SingleSourceMovesList* res, * left_list, * right_list;
@@ -38,6 +40,7 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelper(SingleSourceMovesTreeNo
 	return res;
 }
 
+// This function gets R and L SingleSourceMovesLists(moves) from the helper, and returns the true if R is better, else returns L
 bool isRightListBetter(SingleSourceMovesList* right_list, SingleSourceMovesList* left_list, Player p)
 {
 	int right_captures, left_captures;
@@ -56,12 +59,14 @@ bool isRightListBetter(SingleSourceMovesList* right_list, SingleSourceMovesList*
 	return right_captures > left_captures;
 }
 
+// This function sets SingleSourceMovesList's head and tail to null
 void makeEmptySSMList(SingleSourceMovesList* lst)
 {
 	lst->head = NULL;
 	lst->tail = NULL;
 }
 
+// This function checks if a SingleSourceMovesList is empty
 bool isEmptyList(SingleSourceMovesList* lst)
 {
 	if (lst->head == NULL && lst->tail == NULL)
@@ -70,6 +75,7 @@ bool isEmptyList(SingleSourceMovesList* lst)
 		return false;
 }
 
+// This function creates a new SingleSourceMovesListCell, and returns it
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next)
 {
 	SingleSourceMovesListCell* newNode;
@@ -95,6 +101,7 @@ SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned 
 	return newNode;
 }
 
+// This function gets a SingleSourceMovesList, and inserts to the beggining of it a SingleSourceMovesListCell
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell)
 {
 	if (isEmptyList(lst) == true)
@@ -110,6 +117,7 @@ void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesL
 
 }
 
+// This function frees a SingleSourceMovesList
 void freeList(SingleSourceMovesList* lst)
 {
 	SingleSourceMovesListCell* current = lst->head;
@@ -123,6 +131,7 @@ void freeList(SingleSourceMovesList* lst)
 	lst->tail = NULL;
 }
 
+// This function checks memory allocated for SingleSourceMovesList
 void checkListAllocation(SingleSourceMovesList* lst)
 {
 	if (lst == NULL) {

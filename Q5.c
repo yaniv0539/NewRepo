@@ -1,5 +1,7 @@
 #include <GameLib.h>
 
+// This function is the main game function.
+// It gets a board and a startins player, and starts simulating the game, saves statistics, and print the simulation
 void PlayGame(Board board, Player starting_player)
 {
 	int pNum = 0;
@@ -39,6 +41,7 @@ void PlayGame(Board board, Player starting_player)
 	printStats(players_stats, pNum);
 }
 
+// This function updates the statistics for a a player, for each move performed
 void addStats(STATS* players_stats, int pNum, SingleSourceMovesList* lst)
 {
 	int captures = lst->tail->captures;
@@ -50,6 +53,7 @@ void addStats(STATS* players_stats, int pNum, SingleSourceMovesList* lst)
 		players_stats[pNum].best_capture = captures;
 }
 
+// This function prints the current board
 void printBoard(Board board)
 {
 	int i, j;
@@ -85,6 +89,7 @@ void printBoard(Board board)
 	printf("\n");
 }
 
+// This function returns true if the board received is in status of a "finished game". else it returns false.
 bool checkWinner(Board board, STATS* players_stats)
 {
 	int col;
@@ -100,6 +105,7 @@ bool checkWinner(Board board, STATS* players_stats)
 	return false;
 }
 
+// This functio gets the statistics of both players and name of winner, and prints the statistics of the game
 void printStats(STATS* players_stats, int pNum)
 {
 	int best_capturer_ind;
