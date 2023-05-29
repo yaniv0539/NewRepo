@@ -1,17 +1,26 @@
-#ifndef __LIST_LIB
-#define __LIST_LIB
+#ifndef _ListHandler
+#define _ListHandler
 
-typedef struct _SingleSourceMovesListCell {
+typedef struct checkersPos
+{
+	char row, col;
+} checkersPos;
+
+// Q2 Structs
+typedef struct SingleSourceMovesListCell
+{
 	checkersPos* position;
 	unsigned short captures;
-	struct _SingleSourceMovesListCell* next;
-}SingleSourceMovesListCell;
+	struct SingleSourceMovesListCell* next;
+} SingleSourceMovesListCell;
 
-typedef struct _SingleSourceMovesList {
+typedef struct SingleSourceMovesList
+{
 	SingleSourceMovesListCell* head;
 	SingleSourceMovesListCell* tail;
-}SingleSourceMovesList; 
+} SingleSourceMovesList;
 
+// Q3 Structs
 typedef struct multipleSourceMovesListCell {
 	SingleSourceMovesList* single_source_moves_list;
 	struct multipleSourceMovesListCell* next;
@@ -22,21 +31,31 @@ typedef struct multipleSourceMovesList {
 	MultipleSourceMovesListCell* tail;
 } MultipleSourceMovesList;
 
-// Basic List prototypes:
+void* myMalloc(int size, char* desc);
+void myFree(void* p, char* desc);
+
+// List Functions
 
 // Q2
+
 void makeEmptySSMList(SingleSourceMovesList* lst);
 bool isEmptyList(SingleSourceMovesList* lst);
 SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned short captures, SingleSourceMovesListCell* next);
 void insertSSMListCellToStartList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
-void checkListAllocation(SingleSourceMovesList* lst);
-void freeList(SingleSourceMovesList* lst);
+void insertSSMListCellToEndList(SingleSourceMovesList* lst, SingleSourceMovesListCell* cell);
+void freeSingleSourceMovesList(SingleSourceMovesList* lst);
 
 // Q3
+
 void insertCellToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* tail);
 void insertDataToEndOfMultipleSourceMovesList(MultipleSourceMovesList* lst, SingleSourceMovesList* data);
 MultipleSourceMovesListCell* createNewSingleSourceMovesList(SingleSourceMovesList* data, MultipleSourceMovesListCell* next);
 void makeEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
 bool isEmptyMultipleSourceMovesList(MultipleSourceMovesList* lst);
 
-#endif // !__LIST_LIB
+// Q4
+
+void freeWithoutBestMovesList(MultipleSourceMovesList* lst, MultipleSourceMovesListCell* player_best_moves_lst);
+
+#endif // !ListHandler
+	
