@@ -70,12 +70,6 @@ SingleSourceMovesTreeNode* createNewSingleSourceMovesTreeNode(Board board, check
 	//SingleSourceMovesTreeNode* newNode = (SingleSourceMovesTreeNode*)myMalloc(sizeof(SingleSourceMovesTreeNode));
 	SingleSourceMovesTreeNode* newNode = (SingleSourceMovesTreeNode*)myMalloc(sizeof(SingleSourceMovesTreeNode), "SingleSourceMovesTreeNode");
 
-	if (!newNode)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
-
 	memcpy(newNode->board, board, sizeof(char) * BOARD_SIZE * BOARD_SIZE);
 	newNode->pos = pSrc;
 	newNode->total_captures_so_far = numOfCaptures;
@@ -97,12 +91,6 @@ SingleSourceMovesTree* FindSingleSourceMoves(Board board, checkersPos* pSrc)
 		return NULL;
 
 	pTree = (SingleSourceMovesTree*)myMalloc(sizeof(SingleSourceMovesTree), "SingleSourceMovesTree");
-
-	if (!pTree)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
 
 	makeEmptySingleSourceMovesTree(pTree);
 
@@ -162,12 +150,6 @@ checkersPos* createNewCheckersPos(char row, char col, Player p, int dir, int ste
 	checkersPos* res;
 
 	res = (checkersPos*)myMalloc(sizeof(checkersPos), "checkersPos");
-
-	if (!res)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
 
 	res->row = row + ((ROW_MOVE(p)) * steps);
 	res->col = col + ((COL_MOVE(p, dir)) * steps);
@@ -264,11 +246,6 @@ SingleSourceMovesList* FindSingleSourceOptimalMoveHelper(SingleSourceMovesTreeNo
 	if (right_list == NULL && left_list == NULL)
 	{
 		res = (SingleSourceMovesList*)myMalloc(sizeof(SingleSourceMovesList), "SingleSourceMovesList");
-		if (!res)
-		{
-			printf("Memory Allocation Failure!!!");
-			exit(1);
-		}
 		makeEmptySSMList(res);
 	}
 	else if (right_list != NULL && left_list == NULL)
@@ -325,12 +302,6 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 	checkersPos* pSrc;
 
 	res = (MultipleSourceMovesList*)myMalloc(sizeof(MultipleSourceMovesList), "MultipleSourceMovesList");
-	
-	if (!res)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
 
 	makeEmptyMultipleSourceMovesList(res);
 
@@ -339,12 +310,6 @@ MultipleSourceMovesList* FindAllPossiblePlayerMoves(Board board, Player player)
 			if (board[i][j] == player)
 			{
 				pSrc = (checkersPos*)myMalloc(sizeof(checkersPos), "checkersPos");
-
-				if (!pSrc)
-				{
-					printf("Memory Allocation Failure!!!");
-					exit(1);
-				}
 
 				pSrc->row = ROW_INT_TO_CHAR(i);
 				pSrc->col = COL_INT_TO_CHAR(j);
@@ -373,12 +338,6 @@ void Turn(Board board, Player player)
 	if (player_best_move != NULL)
 	{
 		pSrc = (checkersPos*)myMalloc(sizeof(checkersPos), "checkersPos");
-
-		if (!pSrc)
-		{
-			printf("Memory Allocation Failure!!!");
-			exit(1);
-		}
 
 		pSrc->col = player_best_move->head->position->col;
 		pSrc->row = player_best_move->head->position->row;

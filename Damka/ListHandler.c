@@ -12,6 +12,12 @@ void* myMalloc(int size, char* desc)
 {
 	void* p = malloc(size);
 
+	if (!p)
+	{
+		printf("Memory Allocation Failure!!!");
+		exit(1);
+	}
+
 	//if (strcmp(desc, "checkersPos") == 0)
 	//{
 	//	MallocIndex[0] ++;
@@ -122,19 +128,8 @@ SingleSourceMovesListCell* createNewSSMListCell(checkersPos* position, unsigned 
 {
 	SingleSourceMovesListCell* newNode;
 	newNode = (SingleSourceMovesListCell*)myMalloc(sizeof(SingleSourceMovesListCell), "SingleSourceMovesListCell");
-
-	if (!newNode)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
-
 	newNode->position = (checkersPos*)myMalloc(sizeof(checkersPos), "checkersPos");
 
-	if (!newNode->position) {
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
 	newNode->position->row = position->row;
 	newNode->position->col = position->col;
 	newNode->captures = captures;
@@ -214,12 +209,6 @@ MultipleSourceMovesListCell* createNewSingleSourceMovesList(SingleSourceMovesLis
 {
 	MultipleSourceMovesListCell* res;
 	res = (MultipleSourceMovesListCell*)myMalloc(sizeof(MultipleSourceMovesListCell), "MultipleSourceMovesListCell");
-
-	if (!res)
-	{
-		printf("Memory Allocation Failure!!!");
-		exit(1);
-	}
 
 	res->single_source_moves_list = data;
 	res->next = next;
