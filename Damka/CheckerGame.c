@@ -535,7 +535,7 @@ bool checkWinner(Board board, STATS* players_stats)
 			return true;
 
 	// Check players' capture counters, to see if other player's pieces are no more
-	if (players_stats[0].best_capture == MAX_CAPTURES || players_stats[1].best_capture == MAX_CAPTURES)
+	if (players_stats[0].total_captures == MAX_CAPTURES || players_stats[1].total_captures == MAX_CAPTURES)
 		return true;
 
 	return false;
